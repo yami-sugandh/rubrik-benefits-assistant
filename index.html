@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rubrik India Benefits Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0a1628;
+      --teal: #0a6b6b;
+      --mid: #0d3b5e;
+      --accent: #00c4b4;
+    }
+    html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--navy); overflow: hidden; }
+
+    /* LANDING */
+    #landing {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--navy);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    #landing.out { opacity: 0; transform: scale(1.04); pointer-events: none; }
+
+    .mesh {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 15% 15%, rgba(10,107,107,0.4) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 85% 85%, rgba(13,59,94,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,196,180,0.06) 0%, transparent 65%);
+      animation: mesh 9s ease-in-out infinite alternate;
+    }
+    @keyframes mesh { to { filter: hue-rotate(10deg) brightness(1.1); } }
+
+    .grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(0,196,180,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,196,180,0.04) 1px, transparent 1px);
+      background-size: 52px 52px;
+    }
+
+    .orb { position: absolute; border-radius: 50%; filter: blur(70px); animation: orb 7s ease-in-out infinite alternate; }
+    .o1 { width: 320px; height: 320px; background: rgba(0,196,180,0.1); top: -100px; right: 8%; }
+    .o2 { width: 220px; height: 220px; background: rgba(13,59,94,0.4); bottom: 5%; left: 3%; animation-delay: 3s; }
+    @keyframes orb { to { transform: translate(18px, -18px) scale(1.08); } }
+
+    .card {
+      position: relative; z-index: 2;
+      text-align: center; padding: 48px 32px; max-width: 540px; width: 100%;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,196,180,0.1); border: 1px solid rgba(0,196,180,0.2);
+      border-radius: 40px; padding: 5px 14px; margin-bottom: 28px;
+      animation: up 0.7s ease both;
+    }
+    .badge .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: blink 2s infinite; }
+    @keyframes blink { 50% { opacity: 0.3; } }
+    .badge span { font-size: 11px; font-weight: 600; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .icon {
+      width: 76px; height: 76px; margin: 0 auto 24px;
+      background: linear-gradient(135deg, var(--mid), var(--teal));
+      border-radius: 22px; font-size: 34px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 48px rgba(0,196,180,0.2), 0 8px 24px rgba(0,0,0,0.35);
+      animation: up 0.7s ease 0.1s both;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 5vw, 40px); font-weight: 600;
+      color: #fff; line-height: 1.2; margin-bottom: 14px;
+      animation: up 0.7s ease 0.15s both;
+    }
+    h1 em { font-style: normal; color: var(--accent); }
+
+    .sub {
+      font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.75;
+      margin-bottom: 32px; animation: up 0.7s ease 0.2s both;
+    }
+
+    .pills {
+      display: flex; flex-wrap: wrap; gap: 7px; justify-content: center;
+      margin-bottom: 36px; animation: up 0.7s ease 0.25s both;
+    }
+    .pills span {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.65); font-size: 12px; padding: 5px 13px; border-radius: 20px;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--teal), var(--accent));
+      color: #fff; font-family: 'DM Sans', sans-serif;
+      font-size: 15px; font-weight: 600; padding: 14px 38px;
+      border-radius: 50px; border: none; cursor: pointer;
+      box-shadow: 0 6px 28px rgba(0,196,180,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: up 0.7s ease 0.3s both;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(0,196,180,0.5); }
+    .btn svg { width: 17px; height: 17px; }
+
+    .foot {
+      position: absolute; bottom: 18px;
+      font-size: 10px; color: rgba(255,255,255,0.18);
+      letter-spacing: 0.08em; z-index: 2;
+      animation: up 0.7s ease 0.4s both;
+    }
+
+    @keyframes up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CHATBOT SCREEN */
+    #chat-wrap {
+      position: fixed; inset: 0;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease 0.25s;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #0a1628 0%, #0d3b5e 50%, #0a6b6b 100%);
+      padding: 20px;
+    }
+    #chat-wrap.in { opacity: 1; pointer-events: all; }
+
+    /* Original chatbot CSS */
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    #chat-wrap {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #0d3b5e 50%, #0a6b6b 100%);
+      
+      
+      
+      
+      
+      
+    }
+    .chat-container {
+      width: 100%;
+      max-width: 800px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      
+      
+      height: 88vh;
+      overflow: hidden;
+    }
+    .chat-header {
+      background: linear-gradient(135deg, #0a1628 0%, #0d3b5e 60%, #0a6b6b 100%);
+      color: white;
+      padding: 18px 24px;
+      
+      
+      gap: 14px;
+    }
+    .logo {
+      width: 38px;
+      height: 38px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 8px;
+      
+      
+      
+      font-size: 20px;
+    }
+    .header-text h1 { font-size: 17px; font-weight: 700; }
+    .header-text p { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+    .status-dot {
+      width: 8px; height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      
+      
+      
+      gap: 14px;
+      background: #f8fafc;
+    }
+    .message {
+      
+      gap: 10px;
+      max-width: 85%;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .message.user { align-self: flex-end; flex-direction: row-reverse; }
+    .message.bot { align-self: flex-start; }
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+        
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .bot .avatar { background: linear-gradient(135deg, #0d3b5e, #0a6b6b); color: white; }
+    .user .avatar { background: #e2e8f0; color: #475569; }
+    .bubble {
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: calc(100% - 42px);
+    }
+    .bot .bubble {
+      background: white;
+      color: #1e293b;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .user .bubble {
+      background: linear-gradient(135deg, #0d3b5e, #0a6b6b);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble strong { font-weight: 600; }
+    .bubble ul { padding-left: 18px; margin: 6px 0; }
+    .bubble li { margin: 3px 0; }
+    .bubble a { color: #0a6b6b; text-decoration: underline; }
+    .bubble .tag {
+      display: inline-block;
+      background: #e0f2f1;
+      color: #0a6b6b;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin: 2px 3px 2px 0;
+      font-weight: 600;
+    }
+    .bubble table {
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 13px;
+      width: 100%;
+    }
+    .bubble th, .bubble td {
+      border: 1px solid #e2e8f0;
+      padding: 6px 10px;
+      text-align: left;
+    }
+    .bubble th { background: #f1f5f9; font-weight: 600; }
+    .quick-replies {
+      
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 20px 14px;
+      background: #f8fafc;
+    }
+    .quick-btn {
+      background: white;
+      border: 1.5px solid #0a6b6b;
+      color: #0a6b6b;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-weight: 500;
+    }
+    .quick-btn:hover { background: #0a6b6b; color: white; }
+    .chat-input {
+      
+      padding: 14px 16px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    #userInput {
+      flex: 1;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 22px;
+      padding: 10px 16px;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      max-height: 100px;
+      transition: border-color 0.2s;
+    }
+    #userInput:focus { border-color: #0a6b6b; }
+    #sendBtn {
+      background: linear-gradient(135deg, #0d3b5e, #0a6b6b);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 42px; height: 42px;
+      cursor: pointer;
+        
+      flex-shrink: 0;
+      transition: transform 0.1s;
+    }
+    #sendBtn:hover { transform: scale(1.05); }
+    .typing {  gap: 4px;  padding: 4px 0; }
+    .typing span {
+      width: 6px; height: 6px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: bounce 1s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.15s; }
+    .typing span:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-5px); }
+    }
+    .disclaimer {
+      font-size: 11px;
+      color: #94a3b8;
+      text-align: center;
+      padding: 6px 16px 10px;
+      background: white;
+    }
+  
+  </style>
+</head>
+<body>
+
+<div id="landing">
+  <div class="mesh"></div>
+  <div class="grid"></div>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="card">
+    <div class="badge"><div class="dot"></div><span>Rubrik India · 2026–27</span></div>
+    <div class="icon">🏥</div>
+    <h1>Your <em>Benefits</em><br>Assistant is here</h1>
+    <p class="sub">Instant answers on health insurance, claims,<br>maternity, leave, Acko &amp; Marsh contacts — and more.</p>
+    <div class="pills">
+      <span>GMC Coverage</span><span>File a Claim</span><span>Maternity &amp; IVF</span>
+      <span>Top-up Plans</span><span>Leave Benefits</span><span>OPD &amp; Dental</span>
+    </div>
+    <button class="btn" onclick="launch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Start Chatting
+    </button>
+  </div>
+  <p class="foot">CONFIDENTIAL · INTERNAL USE ONLY · RUBRIK INC.</p>
+</div>
+
+<div id="chat-wrap">
+  <div class="chat-container">
+  <div class="chat-header">
+    <div class="logo">🏥</div>
+    <div class="header-text">
+      <h1>Rubrik India Benefits Assistant</h1>
+      <p><span class="status-dot"></span>Policy Period: April 25, 2026 – April 24, 2027</p>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chatMessages"></div>
+
+  <div class="quick-replies" id="quickReplies">
+    <button class="quick-btn" onclick="askQuestion('What is GMC coverage?')">GMC Coverage</button>
+    <button class="quick-btn" onclick="askQuestion('How do I file a claim?')">File a Claim</button>
+    <button class="quick-btn" onclick="askQuestion('What are the top-up options?')">Top-Up Plans</button>
+    <button class="quick-btn" onclick="askQuestion('What is maternity coverage?')">Maternity</button>
+    <button class="quick-btn" onclick="askQuestion('Who are the contact persons?')">Contacts</button>
+    <button class="quick-btn" onclick="askQuestion('What are my leave benefits?')">Leave Benefits</button>
+  </div>
+
+  <div class="chat-input">
+    <textarea id="userInput" placeholder="Ask about your benefits..." rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
+      oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+    <button id="sendBtn" onclick="sendMessage()">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.269 20.876L5.999 12zm0 0h7.5"/>
+      </svg>
+    </button>
+  </div>
+  <div class="disclaimer">This chatbot provides general guidance only. For claims or pre-planned hospitalisation, always verify with Acko/Marsh SPOCs.</div>
+</div>
+</div>
+
+<script>
+function launch() {
+  document.getElementById('landing').classList.add('out');
+  document.getElementById('chat-wrap').classList.add('in');
+  setTimeout(() => addMessage(GREETING, 'bot'), 600);
+}
+
+
+const KB = {
+  gmc: {
+    keywords: ['gmc','mediclaim','group medical','hospitalisation','hospitalization','health insurance','medical coverage','insured','sum insured','base plan'],
+    answer: `<strong>Group Mediclaim Cover (GMC) – Base Plan</strong><br><br>
+<span class="tag">Insurer</span> Acko General Insurance<br>
+<span class="tag">TPA</span> Family Health Plan Ltd (FHPL)<br>
+<span class="tag">Broker</span> Marsh India<br><br>
+<strong>Coverage:</strong>
+<ul>
+<li>Base Sum Insured: <strong>INR 5 Lakhs</strong> (Family Floater)</li>
+<li>Family: Employee + Spouse + All Children + 2 Parents OR 2 Parents-in-law</li>
+<li>Pre-existing diseases: <strong>Covered from Day 1</strong></li>
+<li>No waiting period for any ailment</li>
+<li>Room: Single Standard A/C room (normal); Actuals for ICU</li>
+<li>Emergency Ambulance: INR 2,000 per hospitalisation</li>
+<li>Pre-hospitalisation: 30 days | Post-hospitalisation: 60 days</li>
+<li>Day care procedures, maternity, baby cover Day 1 — all covered</li>
+<li>OPD Sum Insured: INR 15,000 (family floater, part of base SI)</li>
+</ul>`
+  },
+  copay: {
+    keywords: ['co-pay','copay','co pay','parental claim','parent claim','10%'],
+    answer: `<strong>Co-Pay Details</strong><br><br>
+<ul>
+<li>✅ <strong>No co-pay</strong> for employee, spouse, and dependent children</li>
+<li>⚠️ <strong>10% co-pay</strong> for all parents / parents-in-law claims</li>
+</ul><br>
+<strong>Example (10% co-pay):</strong>
+<table><tr><th>Total Bill</th><th>Insurance Pays (90%)</th><th>You Pay (10%)</th></tr>
+<tr><td>INR 12,500</td><td>INR 11,250</td><td>INR 1,250</td></tr></table>
+Co-pay is paid directly to the hospital at the time of discharge.`
+  },
+  claim: {
+    keywords: ['claim','reimbursement','cashless','file','submit','settlement','document','discharge'],
+    answer: `<strong>How to File a Claim</strong><br><br>
+<strong>🏥 Cashless (Network Hospital):</strong>
+<ul>
+<li>Show your e-card (Acko App) at the TPA desk</li>
+<li>Hospital initiates pre-authorization with FHPL & Acko</li>
+<li>For planned: request pre-auth at least <strong>48 hours in advance</strong></li>
+<li>For emergency: notify within <strong>24 hours</strong> of admission</li>
+<li>Bill settled directly between hospital and Administrator</li>
+</ul>
+
+<strong>💸 Reimbursement (Non-Network Hospital):</strong>
+<ul>
+<li>Pay the hospital bill yourself</li>
+<li>Submit claim on <strong>Acko App</strong> within <strong>20 days</strong> of discharge</li>
+<li>Processing: 15 working days + 7 working days for payment</li>
+</ul>
+
+<strong>📋 Key Documents Required:</strong>
+<ul>
+<li>Completed claim form with signature</li>
+<li>Original hospital bills (itemized, signed & stamped)</li>
+<li>Original discharge report/certificate</li>
+<li>Doctor's bills, prescriptions, lab reports</li>
+<li>Post-discharge follow-up letter from doctor</li>
+</ul>`
+  },
+  topup: {
+    keywords: ['top up','topup','top-up','voluntary','enhance','increase sum','additional coverage'],
+    answer: `<strong>Voluntary Top-Up Insurance Options</strong><br><br>
+Top-up kicks in after you exhaust the base INR 5L. Premium is paid by the employee via payroll deduction.<br><br>
+<table>
+<tr><th>Sum Insured</th><th>Annual Premium (excl. 18% GST)</th></tr>
+<tr><td>INR 2,00,000</td><td>INR 14,742</td></tr>
+<tr><td>INR 3,00,000</td><td>INR 15,518</td></tr>
+<tr><td>INR 5,00,000</td><td>INR 17,942</td></tr>
+<tr><td>INR 7,50,000</td><td>INR 23,294</td></tr>
+<tr><td>INR 10,00,000</td><td>INR 26,521</td></tr>
+<tr><td>INR 15,00,000</td><td>INR 34,233</td></tr>
+</table><br>
+<ul>
+<li>Enroll via <strong>Marsh 'Benefits You' portal</strong></li>
+<li>IAE: deducted in <strong>2 installments</strong> (May & June)</li>
+<li>New Hires: deducted in a <strong>single installment</strong></li>
+<li>Note: Top-up does <strong>not</strong> cover Maternity or capped ailments</li>
+</ul>`
+  },
+  maternity: {
+    keywords: ['maternity','delivery','c-section','cesarean','baby','newborn','prenatal','postnatal','pregnancy','ivf','infertility'],
+    answer: `<strong>Maternity & IVF Benefits</strong><br><br>
+<table>
+<tr><th>Benefit</th><th>Coverage</th></tr>
+<tr><td>Normal Delivery</td><td>INR 1,00,000</td></tr>
+<tr><td>C-Section / Cesarean</td><td>INR 1,00,000</td></tr>
+<tr><td>Waiting Period (9 months)</td><td>Waived off</td></tr>
+<tr><td>Well Baby Expenses</td><td>Up to INR 10,000 within maternity limit</td></tr>
+<tr><td>Pre/Post Natal</td><td>Covered on OPD & IPD basis within maternity limit (30 days)</td></tr>
+<tr><td>Infertility Treatment</td><td>Covered within maternity limit (IPD)</td></tr>
+<tr><td>IVF</td><td>Up to Family Sum Insured (INR 5L) on IPD & OPD basis</td></tr>
+</table><br>
+<strong>Baby Day 1 Cover:</strong> Newborn covered from birth. Declare on Marsh portal within <strong>30 days</strong> — email <a href="mailto:benefits-apac@rubrik.com">benefits-apac@rubrik.com</a>.`
+  },
+  dependents: {
+    keywords: ['dependent','family','spouse','children','parents','enroll','add family','parent coverage','parent-in-law'],
+    answer: `<strong>Dependent Coverage</strong><br><br>
+<strong>Who is covered:</strong>
+<ul>
+<li>✅ Employee (from Day 1)</li>
+<li>✅ Spouse / Same-sex partner / Live-in partner</li>
+<li>✅ All dependent children (up to age 25; no cap for differently-abled)</li>
+<li>✅ 2 Parents OR 2 Parents-in-law (up to age 90) — <em>no cross-combination</em></li>
+</ul>
+
+<strong>❌ Not covered:</strong> Siblings, extended family, pets, contract/temp employees<br><br>
+
+<strong>Mid-year additions allowed only for life events:</strong>
+<ul>
+<li><strong>Birth/Adoption:</strong> Notify within 15 days → email <a href="mailto:benefits-apac@rubrik.com">benefits-apac@rubrik.com</a></li>
+<li><strong>Marriage / Death of dependent:</strong> Notify within 30 days</li>
+<li>Updates reflect in 10–15 working days</li>
+</ul>`
+  },
+  enrolment: {
+    keywords: ['iae','india annual enrolment','enrollment','enrolment','benefits you','portal','new hire','register','window'],
+    answer: `<strong>India Annual Enrolment (IAE)</strong><br><br>
+<strong>For Existing Employees:</strong>
+<ul>
+<li>Once a year during IAE window (March/April)</li>
+<li>Welcome email from <em>noreply@benefitsyou.com</em></li>
+<li>Login → Add/confirm dependents → Select top-up → Add nominees → Confirm Enrollment</li>
+<li>If you miss the window: wait until next IAE (no exceptions)</li>
+</ul>
+
+<strong>For New Hires:</strong>
+<ul>
+<li>Email from Marsh within 15 days of your joining month end</li>
+<li>Must complete enrolment within <strong>7 days</strong> of receiving the email</li>
+<li>E-cards available on Acko App within <strong>30–45 working days</strong></li>
+</ul>
+
+<strong>On leave during IAE?</strong> Get manager approval via email → contact <a href="mailto:benefits-apac@rubrik.com">benefits-apac@rubrik.com</a>`
+  },
+  gpa: {
+    keywords: ['gpa','personal accident','accident','disability','accidental death','disablement'],
+    answer: `<strong>Group Personal Accident Insurance (GPA)</strong><br><br>
+<span class="tag">Insurer</span> Acko General Insurance<br>
+<span class="tag">Eligibility</span> Employees Only<br>
+<span class="tag">Sum Insured</span> 2× CTC<br>
+<span class="tag">Coverage</span> Worldwide<br><br>
+<table>
+<tr><th>Coverage Type</th><th>Amount</th></tr>
+<tr><td>Accidental Death</td><td>Full Sum Insured (2× CTC)</td></tr>
+<tr><td>Permanent Total Disability</td><td>Full Sum Insured</td></tr>
+<tr><td>Permanent Partial Disability</td><td>As per nature of loss</td></tr>
+<tr><td>Temporary Total Disability</td><td>1% of SI or INR 5,000/week (104 weeks max)</td></tr>
+<tr><td>Medical Benefit</td><td>10% of SI or 40% of PA claim (whichever lower)</td></tr>
+<tr><td>Home Modification</td><td>Up to INR 25,000</td></tr>
+<tr><td>Compassionate Visit</td><td>Up to INR 5,000</td></tr>
+</table><br>
+For GPA claims, notify <a href="mailto:benefits-apac@rubrik.com">benefits-apac@rubrik.com</a> within <strong>30 days</strong> of the event.`
+  },
+  gtl: {
+    keywords: ['gtl','term life','life insurance','life cover','death','nominee','beneficiary','terminal illness'],
+    answer: `<strong>Group Term Life Insurance (GTL)</strong><br><br>
+<span class="tag">Insurer</span> ICICI<br>
+<span class="tag">Eligibility</span> Employees Only<br>
+<span class="tag">Sum Insured</span> 2× CTC<br>
+<span class="tag">Free Cover Limit</span> INR 6.3 Crores<br><br>
+<strong>Coverage:</strong>
+<ul>
+<li>Death: Lump sum payout = 2× annual base salary</li>
+<li>Terminal Illness: Equal to base life cover</li>
+</ul>
+<strong>Claim Process:</strong> Nominee notifies <a href="mailto:benefits-apac@rubrik.com">benefits-apac@rubrik.com</a> within <strong>72 hours</strong> of employee death. Payment transferred directly to nominee's bank account.`
+  },
+  contacts: {
+    keywords: ['contact','spoc','reach out','who to call','emergency','phone','email','marsh','acko','fhpl'],
+    answer: `<strong>Key Contact Details</strong><br><br>
+<table>
+<tr><th>Company</th><th>Name</th><th>Phone</th><th>Email</th></tr>
+<tr><td>Acko (Primary)</td><td>Manish Muthanna</td><td>+91 94827 08605</td><td>Manish.muthanna@acko.com</td></tr>
+<tr><td>Acko (Secondary)</td><td>Anurag Gupta</td><td>+91 98735 26789</td><td>anurag.gupta@acko.tech</td></tr>
+<tr><td>Acko (Third)</td><td>Aditya Chadha</td><td>+91 99991 38224</td><td>aditya.chadha@acko.com</td></tr>
+<tr><td>Marsh (Primary)</td><td>Dilip Kumar</td><td>+91 99993 08856</td><td>dilip.k@marsh.com</td></tr>
+<tr><td>Marsh (Escalation)</td><td>Riya Goswami</td><td>+91 85888 28174</td><td>Riya.Goswami@marsh.com</td></tr>
+</table><br>
+<strong>HR/Benefits Team:</strong> <a href="mailto:benefits-apac@rubrik.com">benefits-apac@rubrik.com</a><br>
+<strong>IT issues (Benefits You portal):</strong> <a href="mailto:help@rubrik.com">help@rubrik.com</a>`
+  },
+  opd: {
+    keywords: ['opd','out patient','outpatient','dental','pharmacy','consultation','diagnostic','prescription'],
+    answer: `<strong>OPD Benefits</strong><br><br>
+<span class="tag">OPD Sum Insured</span> INR 15,000 (Family Floater — part of base INR 5L SI)<br><br>
+<table>
+<tr><th>Category</th><th>Coverage</th></tr>
+<tr><td>Pharmacy</td><td>Covered on prescription basis (up to 50% of OPD SI)</td></tr>
+<tr><td>Diagnostic Charges</td><td>Covered on prescription basis</td></tr>
+<tr><td>Consultation</td><td>Covered on prescription basis</td></tr>
+<tr><td>Dental (non-cosmetic)</td><td>Up to INR 15,000/family — root canal, extraction, filling covered; crowns & braces NOT covered</td></tr>
+<tr><td>Vision</td><td>Not covered (Lasik covered for power ±7.5D under IPD)</td></tr>
+</table><br>
+Claims submitted via the <strong>Acko App</strong>.`
+  },
+  exclusions: {
+    keywords: ['exclusion','not covered','excluded','hiv','aids','cosmetic','not payable','war','nuclear','naturopathy'],
+    answer: `<strong>Key Exclusions (GMC Policy)</strong><br><br>
+<ul>
+<li>War, civil war, or nuclear weapon-related conditions</li>
+<li>HIV/AIDS and venereal diseases</li>
+<li>Intentional self-injury or substance abuse hospitalisation</li>
+<li>Cosmetic/plastic surgery (unless correcting an injury)</li>
+<li>Naturopathy</li>
+<li>Vitamins, supplements, health foods (unless prescribed for treatment)</li>
+<li>Spectacles, contact lenses, hearing aids</li>
+<li>Non-medical expenses: registration fees, cafeteria, telephone bills, etc.</li>
+<li>Voluntary pregnancy termination within first 12 weeks</li>
+<li>Hospitalisation for diagnostic tests or observation only</li>
+<li>Gym memberships or health center subscriptions</li>
+</ul>
+⚠️ This is not exhaustive. Contact Acko/Marsh SPOC for specific queries before planned hospitalisation.`
+  },
+  telemedicine: {
+    keywords: ['telemedicine','mfine','m-fine','doctor on call','online doctor','teleconsultation','video consultation'],
+    answer: `<strong>Telemedicine Services via M-Fine (through Acko)</strong><br><br>
+Free unlimited consultations for employee and all covered dependents.<br><br>
+<strong>How to access:</strong>
+<ol style="padding-left:18px;margin:6px 0">
+<li>Download the <strong>Acko App</strong></li>
+<li>Login with your mobile number</li>
+<li>Go to <em>My Policies</em> → link policy using Rubrik email ID</li>
+<li>Go to <em>Doctor on Call</em> tab</li>
+<li>Answer questions → Select a doctor → Consult via audio/video</li>
+</ol><br>
+Covers multiple specialties and general physicians. Also includes online medicine orders and corporate concierge.`
+  },
+  leave: {
+    keywords: ['leave','vacation','privilege','casual','sick','maternity leave','paternity','menstrual','bereavement','adoption'],
+    answer: `<strong>Leave Benefits</strong><br><br>
+<table>
+<tr><th>Leave Type</th><th>Entitlement</th></tr>
+<tr><td>Privilege Leave</td><td>18 working days/year (1.5 days/month)</td></tr>
+<tr><td>Casual Leave</td><td>5 working days/year</td></tr>
+<tr><td>Sick & Mental Health Leave</td><td>7 working days/year</td></tr>
+<tr><td>Maternity Leave</td><td>26 weeks (182 calendar days)</td></tr>
+<tr><td>Paternity / Adoption Leave</td><td>2 calendar weeks (10 business days) at 100% pay</td></tr>
+<tr><td>Surrogacy / Adoption (women)</td><td>12 weeks</td></tr>
+<tr><td>Miscarriage Leave</td><td>Up to 6 weeks</td></tr>
+<tr><td>Menstrual Leave</td><td>1 day per month</td></tr>
+<tr><td>Bereavement Leave</td><td>5 days</td></tr>
+</table>`
+  },
+  ackoapp: {
+    keywords: ['acko app','ecard','e-card','download app','acko application','track claim'],
+    answer: `<strong>Acko App Guide</strong><br><br>
+<strong>Download:</strong> Available on Play Store and App Store<br><br>
+<strong>What you can do on the Acko App:</strong>
+<ul>
+<li>View and download your e-cards</li>
+<li>Submit OPD and hospitalisation claims</li>
+<li>Track claim status</li>
+<li>Access Telemedicine (Doctor on Call)</li>
+<li>View your corporate policy details</li>
+</ul>
+
+<strong>Setup:</strong>
+<ol style="padding-left:18px;margin:6px 0">
+<li>Login with your mobile number</li>
+<li>Go to <em>My Policies</em> tab</li>
+<li>Enter your Rubrik email ID to link corporate policy</li>
+</ol>
+
+<strong>⏱️ E-cards availability:</strong> 30–45 working days after completing IAE.`
+  },
+  portability: {
+    keywords: ['portability','leaving rubrik','resign','exit','leaving company'],
+    answer: `<strong>Insurance Portability</strong><br><br>
+When leaving Rubrik, you can port your insurance to an individual policy.<br><br>
+<ul>
+<li>Contact Marsh <strong>at least 30 days before</strong> your last working day — this is a strict deadline</li>
+<li>Contact: <a href="mailto:dilip.k@marsh.com">dilip.k@marsh.com</a> / Riya Goswami at Marsh</li>
+<li>Policy starts only after payment is made and accepted by insurer</li>
+<li>Top-up premium refunded pro-rata if no claims made</li>
+<li>Marsh also assists with portability for parents who age out of the policy (subject to T&Cs)</li>
+</ul>`
+  },
+  preexisting: {
+    keywords: ['pre-existing','preexisting','diabetes','hypertension','chronic','day 1','waiting period'],
+    answer: `<strong>Pre-Existing Conditions</strong><br><br>
+✅ <strong>All pre-existing diseases are covered from Day 1</strong> — no waiting period required.<br><br>
+This includes conditions like diabetes, hypertension, and any other ailments that existed before joining Rubrik.<br><br>
+Additionally:
+<ul>
+<li>First 30-day and First-year exclusion waivers are in place</li>
+<li>You can make claims immediately without any waiting period</li>
+</ul>`
+  }
+};
+
+const GREETING = `👋 Hi! I'm your <strong>Rubrik India Benefits Assistant</strong>.<br><br>
+I can help you with questions about your <strong>2026–27 benefits package</strong>, including:<br>
+<ul>
+<li>GMC / Health Insurance coverage</li>
+<li>Filing claims (cashless & reimbursement)</li>
+<li>Maternity, IVF, OPD benefits</li>
+<li>Top-up options, GPA & GTL insurance</li>
+<li>Enrolment, life events, leave benefits</li>
+<li>Contact details for Acko & Marsh</li>
+</ul>
+What would you like to know?`;
+
+function getAnswer(input) {
+  const q = input.toLowerCase();
+  let best = null, bestScore = 0;
+  for (const [key, entry] of Object.entries(KB)) {
+    let score = 0;
+    for (const kw of entry.keywords) {
+      if (q.includes(kw)) score += kw.split(' ').length;
+    }
+    if (score > bestScore) { bestScore = score; best = entry; }
+  }
+  if (best && bestScore > 0) return best.answer;
+
+  // Fallback patterns
+  if (/sum insured|si |total cover/.test(q)) return KB.gmc.answer;
+  if (/hospital|admit/.test(q)) return KB.claim.answer;
+  if (/parent|mother|father/.test(q)) return KB.dependents.answer;
+  if (/enrol|portal|login/.test(q)) return KB.enrolment.answer;
+
+  return `I don't have a specific answer for that, but here are some options:<br><br>
+<ul>
+<li>📞 <strong>Acko SPOC:</strong> Manish Muthanna — +91 94827 08605</li>
+<li>📞 <strong>Marsh SPOC:</strong> Dilip Kumar — +91 99993 08856</li>
+<li>📧 <strong>Benefits Team:</strong> <a href="mailto:benefits-apac@rubrik.com">benefits-apac@rubrik.com</a></li>
+</ul>
+You can also refer to the <strong>Benefits Manual</strong> or <strong>FAQs</strong> on The Cube for detailed information.`;
+}
+
+function addMessage(text, sender) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `message ${sender}`;
+  const avatar = sender === 'bot' ? '🤖' : '👤';
+  div.innerHTML = `
+    <div class="avatar">${avatar}</div>
+    <div class="bubble">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'message bot';
+  div.id = 'typingIndicator';
+  div.innerHTML = `<div class="avatar">🤖</div><div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  addMessage(text, 'user');
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    addMessage(getAnswer(text), 'bot');
+  }, 600 + Math.random() * 400);
+}
+
+function askQuestion(q) {
+  document.getElementById('userInput').value = q;
+  sendMessage();
+}
+
+// Greeting triggered by launch button
+</script>
+</body>
+</html>
